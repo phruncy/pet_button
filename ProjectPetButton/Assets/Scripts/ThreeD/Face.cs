@@ -4,7 +4,7 @@ using UnityEngine.Assertions;
 
 namespace Gebaeckmeeting.ThreeD
 {
-    public struct Face
+    public class Face
     {
         public Vertex[] Vertices { get; }
         public int[] VertexIndices { get { return Vertices.Select(vertex => vertex.Index).ToArray(); } }

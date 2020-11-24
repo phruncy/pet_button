@@ -9,8 +9,8 @@ namespace Gebaeckmeeting.PetButton
     {
         [Range(1, 200)]
         [SerializeField]
-        private int _resolution = 100;
-        [Range(1.0f, 100.0f)]
+        private int _resolution = 300;
+        [Range(20.0f, 50.0f)]
         [SerializeField]
         private float _radius = 20.0f;
         [SerializeField]
@@ -21,7 +21,8 @@ namespace Gebaeckmeeting.PetButton
         // Start is called before the first frame update
         void Start()
         {
-            _generator.Create(new SphereData(_radius, _resolution, new DetailedSphereSurfaceShaper(), new IcosahedronSphereBaseBodyCreator(_baseBodyPrefab)));
+            Body result = _generator.Create(new SphereData(_radius, _resolution, new DetailedSphereSurfaceShaper(), new IcosahedronSphereBaseBodyCreator(_baseBodyPrefab)));
+            result.transform.localPosition = Vector3.zero;
         }
 
     }

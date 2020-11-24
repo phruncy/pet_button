@@ -9,5 +9,10 @@ namespace Gebaeckmeeting.PetButton
 		{
 			throw new NotImplementedException();
 		}
+
+		public override void UpdateVertexPositions()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

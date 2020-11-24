@@ -11,7 +11,7 @@ namespace Gebaeckmeeting.PetButton
 		public Sphere Create(SphereData data)
 		{
 			Sphere result = GameObject.Instantiate(_bodyPrefab, null, true);
-			result.Data = data;
+			result.SetData(data);
 			result.GenerateMesh();
 			return result;
 		}

@@ -7,8 +7,8 @@ namespace Gebaeckmeeting.ThreeD
 {
     public class SphereData 
     {
-        public float Radius { get; }
-        public int Resolution { get; }
+        public float Radius { get; set; }
+        public int Resolution { get; set; }
         public SphereSurfaceShaper Shaper { get; }
         public SphereBaseBodyCreator BaseBodyCreator { get; }
 

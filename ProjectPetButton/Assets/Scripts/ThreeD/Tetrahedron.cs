@@ -32,6 +32,18 @@ namespace Gebaeckmeeting.ThreeD
             updateSurface(Surfaces[3], vertices, new int[] { 2, 1, 3 });
         }
 
+        public override void UpdateVertexPositions()
+        {
+            foreach (Surface surface in Surfaces)
+            {
+                foreach (Vertex vertex in surface.Vertices)
+                {
+                    vertex.SetPosition(vertex.Position.normalized * Radius);
+                }
+                surface.UpdateVertexPositions();
+            }
+        }
+
         protected void updateSurface(Surface surface, Vertex[] vertices, int[] indizes)
         {
             Vertex[] surfaceVertices = new Vertex[]

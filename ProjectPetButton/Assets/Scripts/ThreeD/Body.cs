@@ -23,10 +23,13 @@ namespace Gebaeckmeeting.ThreeD
             {
                 Surface mesh = GameObject.Instantiate(_surfacePrefab);
                 mesh.Base.SetParent(_surfacesHook, false);
+                mesh.Base.localPosition = Vector3.zero;
                 Surfaces[i] = mesh;
             }
         }
 
         public abstract void GenerateMesh();
+
+        public abstract void UpdateVertexPositions();
     }
 }

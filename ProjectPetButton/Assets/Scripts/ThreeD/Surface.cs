@@ -23,12 +23,17 @@ namespace Gebaeckmeeting.ThreeD
             _meshFilter.sharedMesh = new Mesh();
         }
 
+        public void UpdateVertexPositions()
+		{
+            Mesh.vertices = Vertices.Select(vertex => vertex.Position).ToArray();
+        }
+
         public void UpdateMesh(Vertex[] vertices, Face[] faces)
 		{
             Vertices = vertices;
             Faces = faces;
             Mesh.Clear();
-            Mesh.vertices = Vertices.Select(vertex => vertex.Position).ToArray();
+            UpdateVertexPositions();
             updateTriangles();
             Mesh.RecalculateNormals();
         }
