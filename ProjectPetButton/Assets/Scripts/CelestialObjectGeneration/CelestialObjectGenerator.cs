@@ -1,19 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Gebaeckmeeting.ThreeD;
 using UnityEngine;
-using System;
 
 namespace Gebaeckmeeting.PetButton
 {
 	public class CelestialObjectGenerator : MonoBehaviour
 	{
 		[SerializeField]
-		private CelestialObjectSurface _surfacePrefab = null;
+		private Sphere _bodyPrefab = null;
 
-		public CelestialObjectSurface Create(CelestialObjectSurfaceData data)
+		public Sphere Create(SphereData data)
 		{
-			CelestialObjectSurface result = GameObject.Instantiate(_surfacePrefab, null, true);
-			result.GenerateMesh(data);
+			Sphere result = GameObject.Instantiate(_bodyPrefab, null, true);
+			result.Data = data;
+			result.GenerateMesh();
 			return result;
 		}
 	}

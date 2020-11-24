@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &680808038070815702
+--- !u!1 &1731343119191817725
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8462515993961981747}
-  - component: {fileID: 5944304438262691654}
+  - component: {fileID: 3871866146706766937}
+  - component: {fileID: 4306378440488277936}
   m_Layer: 0
-  m_Name: Surface
+  m_Name: Icosahedron
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8462515993961981747
+--- !u!4 &3871866146706766937
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 680808038070815702}
+  m_GameObject: {fileID: 1731343119191817725}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.8145418, y: -1.5190101, z: 2.9742196}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5944304438262691654
+--- !u!114 &4306378440488277936
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 680808038070815702}
+  m_GameObject: {fileID: 1731343119191817725}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d221b910b4baf341a9a24acd5f26825, type: 3}
+  m_Script: {fileID: 11500000, guid: 2831fb3baa5f64143804256c91cf3a78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _meshHook: {fileID: 8462515993961981747}
-  _surfaceMeshPrefab: {fileID: 6598838814717797840, guid: e64e8a608612ed646b28ad40ec275f2b, type: 3}
+  _surfacesHook: {fileID: 3871866146706766937}
+  _surfacePrefab: {fileID: 8131729127973048425, guid: e8800ae5a12e96b4cb5b5caf7a159fc0, type: 3}
