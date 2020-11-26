@@ -3,6 +3,9 @@ using UnityEngine.Assertions;
 
 namespace Gebaeckmeeting.ThreeD
 {
+	/// <summary>
+	/// Contructs icosahedron base geometry for the creation of a sphere
+	/// </summary>
 	public class IcosahedronSphereBaseBodyCreator : SphereBaseBodyCreator
 	{
 		Icosahedron _baseBodyPrefab;

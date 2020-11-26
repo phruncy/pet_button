@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace Gebaeckmeeting.ThreeD
 {
+    /// <summary>
+    /// A Container for the data of a single mesh
+    /// </summary>
     public class Surface : MonoBehaviour
     {
         [SerializeField]
@@ -28,6 +31,11 @@ namespace Gebaeckmeeting.ThreeD
             Mesh.vertices = Vertices.Select(vertex => vertex.Position).ToArray();
         }
 
+        /// <summary>
+        /// Updates the surface data with the data of the given vertices and triangles
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <param name="faces"></param>
         public void UpdateMesh(Vertex[] vertices, Face[] faces)
 		{
             Vertices = vertices;

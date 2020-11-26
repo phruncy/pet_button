@@ -5,6 +5,9 @@ using UnityEngine.Assertions;
 
 namespace Gebaeckmeeting.ThreeD
 {
+    /// <summary>
+    /// A polygonal sphere composed of multiple surface meshes
+    /// </summary>
     public class Sphere : Body
     {
         private SphereData Data { get; set; } = null;

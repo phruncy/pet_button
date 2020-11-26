@@ -5,11 +5,14 @@ using UnityEngine;
 
 namespace Gebaeckmeeting.PetButton
 {
+    /// <summary>
+    /// Initializes a (Celestial) Body Component
+    /// </summary>
     public class PlanetCreator : MonoBehaviour
     {
         [Range(1, 200)]
         [SerializeField]
-        private int _resolution = 300;
+        private int _resolution = 10;
         [Range(20.0f, 50.0f)]
         [SerializeField]
         private float _radius = 20.0f;
@@ -18,12 +21,13 @@ namespace Gebaeckmeeting.PetButton
         [SerializeField]
         private Icosahedron _baseBodyPrefab;
 
-        // Start is called before the first frame update
+        
         void Start()
-        {
-            Body result = _generator.Create(new SphereData(_radius, _resolution, new DetailedSphereSurfaceShaper(), new IcosahedronSphereBaseBodyCreator(_baseBodyPrefab)));
+        {    
+            Body result = _generator.Create(new SphereData(_radius, _resolution, new IterativeSphereSurfaceShaper
+                (), new IcosahedronSphereBaseBodyCreator(_baseBodyPrefab)));
             result.transform.localPosition = Vector3.zero;
         }
 
     }
-}
+}   

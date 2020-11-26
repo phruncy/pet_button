@@ -4,6 +4,9 @@ using UnityEngine.Assertions;
 
 namespace Gebaeckmeeting.ThreeD
 {
+    /// <summary>
+    /// A Triangle Polygon
+    /// </summary>
     public class Face
     {
         public Vertex[] Vertices { get; }

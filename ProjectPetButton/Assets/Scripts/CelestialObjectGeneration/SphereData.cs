@@ -5,6 +5,9 @@ using UnityEngine.Assertions;
 
 namespace Gebaeckmeeting.ThreeD
 {
+    /// <summary>
+    /// A container for information about a sphere body 
+    /// </summary>
     public class SphereData 
     {
         public float Radius { get; set; }

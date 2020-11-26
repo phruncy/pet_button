@@ -19,6 +19,7 @@ namespace Gebaeckmeeting.ThreeD
 		}
 
         /// <summary>
+        /// Generates an individual mesh for each of the 20 faces
         /// Source: https://medium.com/@peter_winslow/creating-procedural-planets-in-unity-part-1-df83ecb12e91
         /// </summary>
 		public override void GenerateMesh()
@@ -62,7 +63,10 @@ namespace Gebaeckmeeting.ThreeD
             updateSurface(Surfaces[19], vertices, new int[] { 9, 8, 1 });
         }
 
-		public override void UpdateVertexPositions()
+		/// <summary>
+        /// Updates the vertices of all surfaces
+        /// </summary>
+        public override void UpdateVertexPositions()
 		{
             foreach (Surface surface in Surfaces)
             {
@@ -74,6 +78,12 @@ namespace Gebaeckmeeting.ThreeD
             }
         }
 
+        /// <summary>
+        /// Creates a Triangle from the vertices with the given indeces and updates the surface's mesh with it
+        /// </summary>
+        /// <param name="surface">the surface to be updated</param>
+        /// <param name="vertices">array of all vertices</param>
+        /// <param name="indizes">indices of the triangle's vertices</param>
 		protected void updateSurface(Surface surface, Vertex[] vertices, int[] indizes)
 		{
             Vertex[] surfaceVertices = new Vertex[] 

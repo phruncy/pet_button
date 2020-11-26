@@ -4,7 +4,10 @@ using UnityEngine;
 
 namespace Gebaeckmeeting.ThreeD
 {
-	public class RecursiveSphereSurfaceShaper : SphereSurfaceShaper
+	/// <summary>
+    /// Generates new Triangles on all Sphere surfaces by recursive subdivision
+    /// </summary>
+    public class RecursiveSphereSurfaceShaper : SphereSurfaceShaper
 	{
         private float _radius = 1;
 

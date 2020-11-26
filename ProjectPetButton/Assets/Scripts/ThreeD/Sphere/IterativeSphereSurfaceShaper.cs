@@ -5,7 +5,10 @@ using UnityEngine.Assertions;
 
 namespace Gebaeckmeeting.ThreeD
 {
-	public class DetailedSphereSurfaceShaper : SphereSurfaceShaper
+	/// <summary>
+	/// Creates new Triangles on all Surfaces of a sphere by iterative subdvision
+	/// </summary>
+	public class IterativeSphereSurfaceShaper : SphereSurfaceShaper
 	{
 		public override void Shape(Sphere body, int resolution, float radius)
 		{
@@ -21,7 +24,7 @@ namespace Gebaeckmeeting.ThreeD
 
 		private void shapeSurface(Surface surface, int resolution, float radius)
 		{
-			Assert.AreEqual(surface.Faces.Length, 1, $"To use the {nameof(DetailedSphereSurfaceShaper)} " +
+			Assert.AreEqual(surface.Faces.Length, 1, $"To use the {nameof(IterativeSphereSurfaceShaper)} " +
 					$"the surfaces are not allowed to have more or less than one face.");
 			Face face = surface.Faces[0];
 			Vertex v0 = face.Vertices[0];

@@ -4,6 +4,9 @@ using UnityEngine.Assertions;
 
 namespace Gebaeckmeeting.ThreeD
 {
+    /// <summary>
+    /// A wrapper around vertex data
+    /// </summary>
     public class Vertex 
     {
         public Vector3 Position { get; private set; }
