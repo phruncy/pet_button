@@ -1,5 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -10,72 +11,143 @@ namespace Gebaeckmeeting.ThreeD
 	/// </summary>
 	public class IterativeSphereSurfaceShaper : SphereSurfaceShaper
 	{
-		public override void Shape(Sphere body, int resolution, float radius)
+		public override void Shape(Sphere body, int resolution)
 		{
 			Assert.IsTrue(resolution >= 0);
-			Assert.IsTrue(radius > 0);
+			DateTime start = DateTime.Now;
 
 			if (resolution == 0)
 				return;
 
-			foreach (Surface surface in body.Surfaces)
-				shapeSurface(surface, resolution, radius);
-		}
-
-		private void shapeSurface(Surface surface, int resolution, float radius)
-		{
-			Assert.AreEqual(surface.Faces.Length, 1, $"To use the {nameof(IterativeSphereSurfaceShaper)} " +
-					$"the surfaces are not allowed to have more or less than one face.");
-			Face face = surface.Faces[0];
-			Vertex v0 = face.Vertices[0];
-			Vertex v1 = face.Vertices[1];
-			Vertex v2 = face.Vertices[2];
-			Vector3 vector01 = v1.Position - v0.Position;
-			Vector3 vector20 = v2.Position - v0.Position;
-			resolution = resolution + 1;
-			Vector3 deltaW = vector01 / resolution;
-			Vector3 deltaH = vector20 / resolution;
-
-			List<Vertex> vertices = new List<Vertex>();
-			List<Face> faces = new List<Face>();
-
-			for (int i = 0; i <= resolution; i++)
+			// Creates and schedules shaping jobs
+			JobHandle[] jobHandles = new JobHandle[body.Surfaces.Length];
+			NativeArray<Vertex>[] vertices = new NativeArray<Vertex>[body.Surfaces.Length];
+			NativeArray<Face>[] faces = new NativeArray<Face>[body.Surfaces.Length];
+			for (int i = 0; i < body.Surfaces.Length; i++)
 			{
-				Vector3 startPos = v0.Position + deltaH * i; 
-				for (int j = 0; j <= resolution - i; j++)
-				{
-					Vector3 vertexPosition = (startPos + deltaW * j).normalized * radius;
-					int index = vertices.Count;
-					Vertex newVertex = new Vertex(vertexPosition, index);
-					vertices.Add(newVertex);
+				Surface surface = body.Surfaces[i];
+				//Debug.Log("Start");
 
-					//Debug.Log($"i {i}");
-					//Debug.Log($"j {j}");
-					//Debug.Log($"vertices.Count {vertices.Count}");
-					//Debug.Log($"index {index}");
+				Assert.AreEqual(surface.Faces.Length, 1, $"To use the {nameof(IterativeSphereSurfaceShaper)} " +
+					$"the surfaces are not allowed to have more or less than one face.");
 
-					if (i > 0)
-					{
-						int i1 = index - (resolution + 2 - i);
-						int i2 = i1 + 1;
-						
-						//Debug.Log($"i1 {i1}");
-						//Debug.Log($"i2 {i2}");
-						faces.Add(new Face(new Vertex[] { newVertex, vertices[i1], vertices[i2] }));
+				vertices[i] = new NativeArray<Vertex>(calculateVerticeCount(resolution + 2), Allocator.TempJob);
+				faces[i] = new NativeArray<Face>(calculateFacesCount(resolution + 2), Allocator.TempJob);
+				Face face = surface.Faces[0];
+				Vertex v0 = surface.Vertices[0];
+				Vertex v1 = surface.Vertices[1];
+				Vertex v2 = surface.Vertices[2];
+				Vector3 vector01 = v1.Position - v0.Position;
+				Vector3 vector20 = v2.Position - v0.Position;
+				int actualResolution = resolution + 1;
+				Vector3 deltaW = vector01 / actualResolution;
+				Vector3 deltaH = vector20 / actualResolution;
 
-						if(j > 0)
-						{
-							int i3 = index - 1;
-							//Debug.Log($"i3 {i3}");
-							faces.Add(new Face(new Vertex[] { newVertex, vertices[i3], vertices[i1] }));
-						}
-					}
-				}
-				//Debug.LogWarning($"original | new {v1.Position} | {vertices[vertices.Count-1].Position}");
+				ShapingJob job = new ShapingJob(actualResolution, v0, deltaH, deltaW, vertices[i], faces[i]);
+				jobHandles[i] = job.Schedule();
 			}
 
-			//Debug.LogError($"original | new {v2.Position} | {vertices[vertices.Count - 1].Position}");
-			surface.UpdateMesh(vertices.ToArray(), faces.ToArray());
+			// Waits for all shaping jobs to finish
+			// Then updates the surfaces with the calculated vertices and faces.
+			for (int i = 0; i < jobHandles.Length; i++)
+			{
+				JobHandle handle = jobHandles[i];
+				handle.Complete();
+				body.Surfaces[i].UpdateMesh(vertices[i].ToArray(), faces[i].ToArray());
+				vertices[i].Dispose();
+				faces[i].Dispose();
+			}
+
+			double duration = (DateTime.Now - start).TotalMilliseconds;
+			Debug.Log($"The shaping of the sphere surfaces with resolution {resolution} took {duration} ms");
+		}
+
+		private int calculateVerticeCount(int verticesPerSide)
+		{
+			Assert.IsTrue(verticesPerSide > 1, "A side has at least 2 vertices");
+			int result = 0;
+			for(int i = verticesPerSide; i >= 0; i--)
+			{
+				result += i;
+			}
+			return result;
+		}
+
+		private int calculateFacesCount(int verticesPerSide)
+		{
+			Assert.IsTrue(verticesPerSide > 1, "A side has at least 2 vertices");
+			int result = 1;
+			for (int i = 1; i < verticesPerSide; i++)
+			{
+				// Every additional vertex per side adds two more faces than the vertex before.
+				result += i*2-1;
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// Struct to parallelize the sphere shaping.
+		/// </summary>
+		public struct ShapingJob : IJob
+		{
+			private int Resolution { get; }
+			private Vertex StartVertex { get; }
+			private Vector3 DeltaH { get; }
+			private Vector3 DeltaW { get; }
+			public NativeArray<Vertex> Vertices;
+			public NativeArray<Face> Faces;
+
+			public ShapingJob(int resolution,
+				Vertex startVertex,
+				Vector3 deltaH,
+				Vector3 deltaW,
+				NativeArray<Vertex> vertices,
+				NativeArray<Face> faces)
+			{
+				Resolution = resolution;
+				StartVertex = startVertex;
+				DeltaH = deltaH;
+				DeltaW = deltaW;
+				Vertices = vertices;
+				Faces = faces;
+			}
+
+			public void Execute()
+			{
+				int faceIndex = 0;
+				int vertexIndex = 0;
+
+				// Interating over the triangle 'rows'
+				for (int i = 0; i <= Resolution; i++)
+				{
+					Vector3 startPos = StartVertex.Position + DeltaH * i;
+					// Interating over the triangle row vertices. 
+					// The number of row vertices reduces with every row. (One vertex on top of the array)
+					for (int j = 0; j <= Resolution - i; j++)
+					{
+						Vector3 vertexPosition = (startPos + DeltaW * j).normalized;
+						Vertices[vertexIndex] = new Vertex(vertexPosition);
+						
+						// Create Face if this is not the first row
+						if (i > 0)
+						{
+							int i1 = vertexIndex - (Resolution + 2 - i);
+							int i2 = i1 + 1;
+							Faces[faceIndex] = new Face(new Vector3Int(vertexIndex, i1, i2));
+							faceIndex++;
+
+							// Create a second upside down triangle if this is not the first vertex of the current row
+							if (j > 0)
+							{
+								int i3 = vertexIndex - 1;
+								Faces[faceIndex] = new Face(new Vector3Int(vertexIndex, i3, i1));
+								faceIndex++;
+							}
+						}
+						vertexIndex++;
+					}
+				}
+			}
 		}
 	}
 }

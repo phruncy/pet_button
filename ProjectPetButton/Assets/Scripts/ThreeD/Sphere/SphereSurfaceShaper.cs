@@ -14,7 +14,6 @@ namespace Gebaeckmeeting.ThreeD
         /// </summary>
         /// <param name="body">The sphere to be shaped</param>
         /// <param name="resolution">the level of detail of the subdivision</param>
-        /// <param name="radius">the radius of the sphere</param>
-        public abstract void Shape(Sphere body, int resolution, float radius);
+        public abstract void Shape(Sphere body, int resolution);
     }
 }

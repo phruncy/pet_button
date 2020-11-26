@@ -22,14 +22,15 @@ namespace Gebaeckmeeting.ThreeD
 		{
             createSurfaceMeshes(4);
             Vertex[] vertices = new Vertex[4];
-            vertices[0] = new Vertex(Vector3.up * Radius, 0);
-            vertices[1] = new Vertex(Quaternion.AngleAxis(120, Vector3.left) * Vector3.up * Radius, 1);
-            vertices[2] = new Vertex(Quaternion.AngleAxis(120, Vector3.up) * Quaternion.AngleAxis(120, Vector3.left) * Vector3.up * Radius, 2);
-            vertices[3] = new Vertex(Quaternion.AngleAxis(240, Vector3.up) * Quaternion.AngleAxis(120, Vector3.left) * Vector3.up * Radius, 3);
-            updateSurface(Surfaces[0], vertices, new int[] { 2, 3, 0 });
-            updateSurface(Surfaces[1], vertices, new int[] { 1, 2, 0 });
-            updateSurface(Surfaces[2], vertices, new int[] { 3, 1, 0 });
-            updateSurface(Surfaces[3], vertices, new int[] { 2, 1, 3 });
+            vertices[0] = new Vertex(Vector3.up * Radius);
+            vertices[1] = new Vertex(Quaternion.AngleAxis(120, Vector3.left) * Vector3.up * Radius);
+            vertices[2] = new Vertex(Quaternion.AngleAxis(120, Vector3.up) * Quaternion.AngleAxis(120, Vector3.left) * Vector3.up * Radius);
+            vertices[3] = new Vertex(Quaternion.AngleAxis(240, Vector3.up) * Quaternion.AngleAxis(120, Vector3.left) * Vector3.up * Radius);
+            Face face = new Face(new Vector3Int(0, 1, 2));
+            Surfaces[0].UpdateMesh(new Vertex[] { vertices[2], vertices[3], vertices[0] }, new Face[] { face });
+            Surfaces[0].UpdateMesh(new Vertex[] { vertices[1], vertices[2], vertices[0] }, new Face[] { face });
+            Surfaces[0].UpdateMesh(new Vertex[] { vertices[3], vertices[1], vertices[0] }, new Face[] { face });
+            Surfaces[0].UpdateMesh(new Vertex[] { vertices[2], vertices[1], vertices[3] }, new Face[] { face });
         }
 
         public override void UpdateVertexPositions()
@@ -40,19 +41,8 @@ namespace Gebaeckmeeting.ThreeD
                 {
                     vertex.SetPosition(vertex.Position.normalized * Radius);
                 }
-                surface.UpdateVertexPositions();
+                surface.UpdateMeshVertices();
             }
-        }
-
-        protected void updateSurface(Surface surface, Vertex[] vertices, int[] indizes)
-        {
-            Vertex[] surfaceVertices = new Vertex[]
-            {
-                new Vertex(vertices[indizes[0]].Position, 0),
-                new Vertex(vertices[indizes[1]].Position, 1),
-                new Vertex(vertices[indizes[2]].Position, 2) 
-            };
-            surface.UpdateMesh(surfaceVertices, new Face[] { new Face(surfaceVertices) });
         }
     }
 }

@@ -42,7 +42,8 @@ namespace Gebaeckmeeting.ThreeD
             Assert.IsNotNull(Data, "Please provide Data before trying to generate the mesh");
             Body baseBody = Data.BaseBodyCreator.Create(Data.Radius);
             copySurfaces(baseBody);
-            Data.Shaper.Shape(this, Data.Resolution, Data.Radius);
+            Data.Shaper.Shape(this, Data.Resolution);
+            UpdateVertexPositions();
             GameObject.Destroy(baseBody.gameObject);
         }
 
@@ -50,11 +51,11 @@ namespace Gebaeckmeeting.ThreeD
 		{
 			foreach(Surface surface in Surfaces)
 			{
-                foreach(Vertex vertex in surface.Vertices)
-				{
-                    vertex.SetPosition(vertex.Position.normalized * Radius);
+                for(int i = 0; i< surface.Vertices.Length; i++ )
+                { 
+                    surface.Vertices[i].SetPosition(surface.Vertices[i].Position.normalized * Radius);
                 }
-                surface.UpdateVertexPositions();
+                surface.UpdateMeshVertices();
             }
 
             Vertex v = Surfaces[0].Vertices[0];

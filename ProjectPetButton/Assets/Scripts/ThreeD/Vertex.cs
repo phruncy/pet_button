@@ -7,22 +7,24 @@ namespace Gebaeckmeeting.ThreeD
     /// <summary>
     /// A wrapper around vertex data
     /// </summary>
-    public class Vertex 
+    public struct Vertex 
     {
         public Vector3 Position { get; private set; }
-        public int Index { get; private set; }
 
 
-        public Vertex(Vector3 position, int index)
+        public Vertex(Vector3 position)
 		{
-            Assert.IsTrue(index >= 0, "The vertex index has to be larger than or equal to 0.");
             Position = position;
-            Index = index;
         }
 
         public void SetPosition(Vector3 position)
 		{
             Position = position;
         }
-    }
+
+		public override string ToString()
+		{
+            return $"Vertex({Position.ToString()})";
+		}
+	}
 }

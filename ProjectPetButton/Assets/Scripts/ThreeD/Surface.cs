@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Unity.Jobs;
+using Unity.Collections;
 
 namespace Gebaeckmeeting.ThreeD
 {
@@ -26,9 +28,16 @@ namespace Gebaeckmeeting.ThreeD
             _meshFilter.sharedMesh = new Mesh();
         }
 
-        public void UpdateVertexPositions()
+        /// <summary>
+        /// Updates the vertices of the surface mesh.
+        /// (Very quick)
+        /// </summary>
+        public void UpdateMeshVertices()
 		{
-            Mesh.vertices = Vertices.Select(vertex => vertex.Position).ToArray();
+            Vector3[] vectors = new Vector3[Vertices.Length];
+            for (int i = 0; i < Vertices.Length; i++)
+                vectors[i] = Vertices[i].Position;
+            Mesh.vertices = vectors;
         }
 
         /// <summary>
@@ -41,19 +50,26 @@ namespace Gebaeckmeeting.ThreeD
             Vertices = vertices;
             Faces = faces;
             Mesh.Clear();
-            UpdateVertexPositions();
+            UpdateMeshVertices();
             updateTriangles();
             Mesh.RecalculateNormals();
         }
 
+        /// <summary>
+        /// Updates the triangles of the surface mesh.
+        /// (not so quick)
+        /// </summary>
         private void updateTriangles()
 		{
-            int[] indices = Faces.Aggregate(new List<int>(), (list, next) =>
-            {
-                list.AddRange(next.VertexIndices);
-                return list;
-            }).ToArray();
+            int[] indices = new int[Faces.Length * 3];
+            for(int i = 0; i<Faces.Length; i++)
+			{
+                Face face = Faces[i];
+                indices[i * 3] = face.VertexIndices.x;
+                indices[i * 3 + 1] = face.VertexIndices.y;
+                indices[i * 3 + 2] = face.VertexIndices.z;
+            }
             Mesh.triangles = indices;
         }
-    }
+	}
 }

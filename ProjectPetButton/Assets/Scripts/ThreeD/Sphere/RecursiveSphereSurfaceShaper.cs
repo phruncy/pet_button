@@ -9,12 +9,9 @@ namespace Gebaeckmeeting.ThreeD
     /// </summary>
     public class RecursiveSphereSurfaceShaper : SphereSurfaceShaper
 	{
-        private float _radius = 1;
 
-
-        public override void Shape(Sphere body, int resolution, float radius)
+        public override void Shape(Sphere body, int resolution)
         {
-            _radius = radius;
             shapeSurface(body, 1, resolution);
         }
 
@@ -34,43 +31,46 @@ namespace Gebaeckmeeting.ThreeD
             Face[] faces = surface.Faces;
             List<Vertex> verticesNew = new List<Vertex>(vertices);
             List<Face> facesNew = new List<Face>();
-            Dictionary<string, Vertex> iDToIndex = new Dictionary<string, Vertex>();
+            Dictionary<string, int> iDToIndex = new Dictionary<string, int>();
 
             for (int i = 0; i < faces.Length; i++)
             {
                 int index = i * 3;
 
-                Vertex[] v = faces[i].Vertices;
-                Vertex v0 = v[0];
-                Vertex v1 = v[1];
-                Vertex v2 = v[2];
+                Face face = faces[i];
+                int i0 = face.VertexIndices[0];
+                int i1 = face.VertexIndices[1];
+                int i2 = face.VertexIndices[2];
+                Vertex v0 = vertices[i0];
+                Vertex v1 = vertices[i1];
+                Vertex v2 = vertices[i2];
 
-                Vertex v01 = getInbetweenVertex(v0, v1, ref iDToIndex, ref verticesNew);
-                Vertex v12 = getInbetweenVertex(v1, v2, ref iDToIndex, ref verticesNew);
-                Vertex v20 = getInbetweenVertex(v2, v0, ref iDToIndex, ref verticesNew);
+                int i01 = getInbetweenVertexIndex(v0, v1, ref iDToIndex, ref verticesNew);
+                int i12 = getInbetweenVertexIndex(v1, v2, ref iDToIndex, ref verticesNew);
+                int i20 = getInbetweenVertexIndex(v2, v0, ref iDToIndex, ref verticesNew);
 
-                facesNew.Add(new Face(new Vertex[] { v0, v01, v20 }));
-                facesNew.Add(new Face(new Vertex[] { v01, v1, v12 }));
-                facesNew.Add(new Face(new Vertex[] { v20, v12, v2 }));
-                facesNew.Add(new Face(new Vertex[] { v20, v01, v12 }));
+                facesNew.Add(new Face(new Vector3Int( i0, i01, i20 )));
+                facesNew.Add(new Face(new Vector3Int(i01, i1, i12 )));
+                facesNew.Add(new Face(new Vector3Int(i20, i12, i2 )));
+                facesNew.Add(new Face(new Vector3Int(i20, i01, i12 )));
             }
 
             surface.UpdateMesh(verticesNew.ToArray(), facesNew.ToArray());
         }
 
 
-        private Vertex getInbetweenVertex(Vertex v0, Vertex v1, ref Dictionary<string, Vertex> iDToIndex, ref List<Vertex> verticesNew)
+        private int getInbetweenVertexIndex(Vertex v0, Vertex v1, ref Dictionary<string, int> iDToIndex, ref List<Vertex> verticesNew)
         {
-            Vertex result;
-            string iD1 = $"{v0.Index}|{v1.Index}";
-            string iD2 = $"{v1.Index}|{v0.Index}";
+            int result;
+            string iD1 = $"{v0.Position.ToString()}|{v1.Position.ToString()}";
+            string iD2 = $"{v1.Position.ToString()}|{v0.Position.ToString()}";
 
             if (!iDToIndex.TryGetValue(iD1, out result))
             {
-                Vector3 vertex01Position = (v0.Position + (v1.Position - v0.Position) / 2).normalized * _radius;
-                result = new Vertex(vertex01Position, verticesNew.Count);
+                Vector3 vertex01Position = (v0.Position + (v1.Position - v0.Position) / 2).normalized;
+                Vertex v = new Vertex(vertex01Position);
                 //Debug.Log($"{vertex0} | {vertex1} | {vertex01}");
-                verticesNew.Add(result);
+                verticesNew.Add(v);
                 iDToIndex[iD1] = result;
                 iDToIndex[iD2] = result;
             }

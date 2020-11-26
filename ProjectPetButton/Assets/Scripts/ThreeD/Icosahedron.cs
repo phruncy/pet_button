@@ -28,39 +28,40 @@ namespace Gebaeckmeeting.ThreeD
             Vertex[] vertices = new Vertex[12];
             float t = (1.0f + Mathf.Sqrt(5.0f)) / 2.0f;
 
-            vertices[0] = new Vertex(new Vector3(-1, t, 0).normalized * Radius, 0);
-            vertices[1] = new Vertex(new Vector3(1, t, 0).normalized * Radius, 1);
-            vertices[2] = new Vertex(new Vector3(-1, -t, 0).normalized * Radius, 2);
-            vertices[3] = new Vertex(new Vector3(1, -t, 0).normalized * Radius, 3);
-            vertices[4] = new Vertex(new Vector3(0, -1, t).normalized * Radius, 4);
-            vertices[5] = new Vertex(new Vector3(0, 1, t).normalized * Radius, 5);
-            vertices[6] = new Vertex(new Vector3(0, -1, -t).normalized * Radius, 6);
-            vertices[7] = new Vertex(new Vector3(0, 1, -t).normalized * Radius, 7);
-            vertices[8] = new Vertex(new Vector3(t, 0, -1).normalized * Radius, 8);
-            vertices[9] = new Vertex(new Vector3(t, 0, 1).normalized * Radius, 9);
-            vertices[10] = new Vertex(new Vector3(-t, 0, -1).normalized * Radius, 10);
-            vertices[11] = new Vertex(new Vector3(-t, 0, 1).normalized * Radius, 11);
+            vertices[0] = new Vertex(new Vector3(-1, t, 0).normalized * Radius);
+            vertices[1] = new Vertex(new Vector3(1, t, 0).normalized * Radius);
+            vertices[2] = new Vertex(new Vector3(-1, -t, 0).normalized * Radius);
+            vertices[3] = new Vertex(new Vector3(1, -t, 0).normalized * Radius);
+            vertices[4] = new Vertex(new Vector3(0, -1, t).normalized * Radius);
+            vertices[5] = new Vertex(new Vector3(0, 1, t).normalized * Radius);
+            vertices[6] = new Vertex(new Vector3(0, -1, -t).normalized * Radius);
+            vertices[7] = new Vertex(new Vector3(0, 1, -t).normalized * Radius);
+            vertices[8] = new Vertex(new Vector3(t, 0, -1).normalized * Radius);
+            vertices[9] = new Vertex(new Vector3(t, 0, 1).normalized * Radius);
+            vertices[10] = new Vertex(new Vector3(-t, 0, -1).normalized * Radius);
+            vertices[11] = new Vertex(new Vector3(-t, 0, 1).normalized * Radius);
 
-            updateSurface(Surfaces[0], vertices, new int[] { 0, 11, 5 });
-            updateSurface(Surfaces[1], vertices, new int[] { 0, 5, 1 });
-            updateSurface(Surfaces[2], vertices, new int[] { 0, 1, 7 });
-            updateSurface(Surfaces[3], vertices, new int[] { 0, 7, 10 });
-            updateSurface(Surfaces[4], vertices, new int[] { 0, 10, 11 });
-            updateSurface(Surfaces[5], vertices, new int[] { 1, 5, 9 });
-            updateSurface(Surfaces[6], vertices, new int[] { 5, 11, 4 });
-            updateSurface(Surfaces[7], vertices, new int[] { 11, 10, 2 });
-            updateSurface(Surfaces[8], vertices, new int[] { 10, 7, 6 });
-            updateSurface(Surfaces[9], vertices, new int[] { 7, 1, 8 });
-            updateSurface(Surfaces[10], vertices, new int[] { 3, 9, 4 });
-            updateSurface(Surfaces[11], vertices, new int[] { 3, 4, 2 });
-            updateSurface(Surfaces[12], vertices, new int[] { 3, 2, 6 });
-            updateSurface(Surfaces[13], vertices, new int[] { 3, 6, 8 });
-            updateSurface(Surfaces[14], vertices, new int[] { 3, 8, 9 });
-            updateSurface(Surfaces[15], vertices, new int[] { 4, 9, 5 });
-            updateSurface(Surfaces[16], vertices, new int[] { 2, 4, 11 });
-            updateSurface(Surfaces[17], vertices, new int[] { 6, 2, 10 });
-            updateSurface(Surfaces[18], vertices, new int[] { 8, 6, 7 });
-            updateSurface(Surfaces[19], vertices, new int[] { 9, 8, 1 });
+            Face face = new Face(new Vector3Int( 0, 1, 2 ));
+            Surfaces[0].UpdateMesh(new Vertex[] { vertices[0], vertices[11], vertices[5] }, new Face[] { face });
+            Surfaces[1].UpdateMesh(new Vertex[] { vertices[0], vertices[5], vertices[1] }, new Face[] { face });
+            Surfaces[2].UpdateMesh(new Vertex[] { vertices[0], vertices[1], vertices[7] }, new Face[] { face });
+            Surfaces[3].UpdateMesh(new Vertex[] { vertices[0], vertices[7], vertices[10] }, new Face[] { face });
+            Surfaces[4].UpdateMesh(new Vertex[] { vertices[0], vertices[10], vertices[11] }, new Face[] { face });
+            Surfaces[5].UpdateMesh(new Vertex[] { vertices[1], vertices[5], vertices[9] }, new Face[] { face });
+            Surfaces[6].UpdateMesh(new Vertex[] { vertices[5], vertices[11], vertices[4] }, new Face[] { face });
+            Surfaces[7].UpdateMesh(new Vertex[] { vertices[11], vertices[10], vertices[2] }, new Face[] { face });
+            Surfaces[8].UpdateMesh(new Vertex[] { vertices[10], vertices[7], vertices[6] }, new Face[] { face });
+            Surfaces[9].UpdateMesh(new Vertex[] { vertices[7], vertices[1], vertices[8] }, new Face[] { face });
+            Surfaces[10].UpdateMesh(new Vertex[] { vertices[3], vertices[9], vertices[4] }, new Face[] { face });
+            Surfaces[11].UpdateMesh(new Vertex[] { vertices[3], vertices[4], vertices[2] }, new Face[] { face });
+            Surfaces[12].UpdateMesh(new Vertex[] { vertices[3], vertices[2], vertices[6] }, new Face[] { face });
+            Surfaces[13].UpdateMesh(new Vertex[] { vertices[3], vertices[6], vertices[8] }, new Face[] { face });
+            Surfaces[14].UpdateMesh(new Vertex[] { vertices[3], vertices[8], vertices[9] }, new Face[] { face });
+            Surfaces[15].UpdateMesh(new Vertex[] { vertices[4], vertices[9], vertices[5] }, new Face[] { face });
+            Surfaces[16].UpdateMesh(new Vertex[] { vertices[2], vertices[4], vertices[11] }, new Face[] { face });
+            Surfaces[17].UpdateMesh(new Vertex[] { vertices[6], vertices[2], vertices[10] }, new Face[] { face });
+            Surfaces[18].UpdateMesh(new Vertex[] { vertices[8], vertices[6], vertices[7] }, new Face[] { face });
+            Surfaces[19].UpdateMesh(new Vertex[] { vertices[9], vertices[8], vertices[1] }, new Face[] { face });
         }
 
 		/// <summary>
@@ -74,26 +75,8 @@ namespace Gebaeckmeeting.ThreeD
                 {
                     vertex.SetPosition(vertex.Position.normalized * Radius);
                 }
-                surface.UpdateVertexPositions();
+                surface.UpdateMeshVertices();
             }
-        }
-
-        /// <summary>
-        /// Creates a Triangle from the vertices with the given indeces and updates the surface's mesh with it
-        /// </summary>
-        /// <param name="surface">the surface to be updated</param>
-        /// <param name="vertices">array of all vertices</param>
-        /// <param name="indizes">indices of the triangle's vertices</param>
-		protected void updateSurface(Surface surface, Vertex[] vertices, int[] indizes)
-		{
-            Vertex[] surfaceVertices = new Vertex[] 
-            { 
-                new Vertex(vertices[indizes[0]].Position, 0), 
-                new Vertex(vertices[indizes[1]].Position, 1), 
-                new Vertex(vertices[indizes[2]].Position, 2) 
-            };
-
-            surface.UpdateMesh(surfaceVertices, new Face[] { new Face(surfaceVertices) });
         }
 	}
 }
